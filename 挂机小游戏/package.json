@@ -1,0 +1,18 @@
+{
+  "name": "coin-factory",
+  "version": "1.9.0",
+  "private": true,
+  "description": "金币工厂 —— 单文件网页放置游戏（源码即成品，双击 HTML 即可运行）",
+  "scripts": {
+    "test": "node _dev/smoke.js",
+    "sim": "node _dev/sim.js 7200",
+    "sim:challenge": "node _dev/sim_challenge.js",
+    "responsive": "node _dev/responsive.js",
+    "shots": "node _dev/make_shots.js",
+    "check:browser": "node _dev/browser_check.js",
+    "verify": "node _dev/smoke.js && node _dev/browser_check.js && node _dev/responsive.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.3"
+  }
+}

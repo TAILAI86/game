@@ -15,3 +15,9 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+
+# 开发测试台
+node_modules/
+_dev/shots/
+_dev/*.txt
+_dev/dom.txt
