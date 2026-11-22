@@ -20,4 +20,5 @@ Thumbs.db
 node_modules/
 _dev/shots/
 _dev/*.txt
+_dev/pr_body.md
 _dev/dom.txt
