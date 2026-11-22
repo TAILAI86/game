@@ -83,15 +83,8 @@ def main():
     print("local HEAD   =", head)
     print("local parent =", parent)
 
-    # 远端基线分支必须等于本地父提交，否则不能快进
-    base_ref = api("/repos/%s/git/ref/heads/%s" % (REPO, args.base), token=token)
-    remote_base = base_ref["object"]["sha"]
-    print("remote %s =" % args.base, remote_base)
-    if remote_base != parent:
-        raise SystemExit("remote %s %s != local parent %s — refusing" % (args.base, remote_base, parent))
-
-    # 目标分支：不存在则创建（指向父提交），存在则校验能否快进
-    # 注意：GET/PATCH 用 "heads/<branch>" 形式，POST 建分支时 body 里用 "refs/heads/<branch>"
+    # 快进校验：远端分支必须等于本地父提交
+    # （首次推送时分支还不存在，此时要求 base 分支等于本地父提交）
     short_ref = "heads/" + args.branch
     branch_ref = "refs/heads/" + args.branch
     existing = None
@@ -102,10 +95,15 @@ def main():
             raise
     if existing:
         cur = existing["object"]["sha"]
-        print("branch exists at", cur)
+        print("remote branch  =", cur)
         if cur != parent:
             raise SystemExit("remote branch %s != local parent %s — refusing to force-push" % (cur, parent))
     else:
+        base_ref = api("/repos/%s/git/ref/heads/%s" % (REPO, args.base), token=token)
+        remote_base = base_ref["object"]["sha"]
+        print("remote %s =" % args.base, remote_base)
+        if remote_base != parent:
+            raise SystemExit("remote %s %s != local parent %s — refusing" % (args.base, remote_base, parent))
         if not args.dry_run:
             api("/repos/%s/git/refs" % REPO, "POST", {"ref": branch_ref, "sha": parent}, token)
             print("branch created ->", branch_ref)
